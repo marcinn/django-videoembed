@@ -1,0 +1,2 @@
+from default_wrappers import register_default_wrappers
+register_default_wrappers()
