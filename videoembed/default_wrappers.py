@@ -2,13 +2,14 @@ import re
 from django.template.loader import render_to_string
 from django.conf import settings
 from registry import wrappers
+import urlparse
 
 
 
 class YoutubeWrapper(object):
     re_urls = (
-        re.compile(r'http://(www.)?youtube.com/watch\?v=(?P<id>[^&]+).*$'),
-        re.compile(r'http://(www.)?youtu.be/(?P<id>.+)'),
+        re.compile(r'https?://(www.)?youtube.com/watch\?v=(?P<id>[^&]+).*$'),
+        re.compile(r'https?://(www.)?youtu.be/(?P<id>.+)'),
     )
 
     def match_url(self, url):
@@ -17,8 +18,11 @@ class YoutubeWrapper(object):
     def clean_url(self, url):
         for pattern in self.re_urls:
             match = pattern.match(url)
+            parsed_url = urlparse.urlparse(url)
             if match:
-                return 'http://www.youtube.com/embed/%(id)s' % match.groupdict()
+                params = match.groupdict()
+                params['scheme'] = parsed_url.scheme
+                return '%(scheme)s://www.youtube.com/embed/%(id)s' % params
         return None
 
     def render(self, url, opts=None):
