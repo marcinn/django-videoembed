@@ -1,13 +1,13 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='django-videoembed',
-    version='0.1-1',
+    version='0.1-2',
     description="Easy embedding videos with Django",
     author='Marcin Nowak',
     author_email='marcin.j.nowak@gmail.com',
     url='https://github.com/marcinn/django-video-embed',
-    packages=['videoembed',],
+    packages=find_packages(),
     package_dir={'videoembed': 'videoembed'},
     classifiers=[
         'Development Status :: 3 - Alpha',
