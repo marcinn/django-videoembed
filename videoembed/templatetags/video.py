@@ -30,20 +30,20 @@ def token_kwargs(bits, parser):
 
 
 class EmbedMovieNode(template.Node):
-    def __init__(self, videometa, opts):
-        self.opts = dict([(key, template.Variable(opt)) for key,opt in opts.items()])
+    def __init__(self, videometa, options):
+        self.options = dict([(key, template.Variable(opt)) for key,opt in options.items()])
         self.videometa = template.Variable(videometa)
 
     def render(self, context):
-        opts = []
-        for key, value in self.opts.items():
-            opts.append((key, value.resolve(context)))
+        options = []
+        for key, value in self.options.items():
+            options.append((key, value.resolve(context)))
         videometa = self.videometa.resolve(context)
 
         if isinstance(videometa, basestring):
-            return embed(videometa, **dict(opts)) # BC
+            return embed(videometa, **dict(options)) # BC
         else:
-            return videometa.embed(opts=opts)
+            return videometa.embed(options=options)
         
 
 @register.tag
@@ -52,13 +52,13 @@ def embed_movie(parser, token):
     videometa = bits[1]
     kwargs_bits = bits[2:]
 
-    opts = {}
+    options = {}
     for bit in kwargs_bits:
         match = kwarg_re.match(bit)
         if match:
             key,val=match.groups()
-            opts[key]=val
-    return EmbedMovieNode(videometa, opts)
+            options[key]=val
+    return EmbedMovieNode(videometa, options)
 
 
 class GetMovieNode(template.Node):

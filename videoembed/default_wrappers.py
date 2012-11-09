@@ -17,8 +17,8 @@ class VideoMeta(object):
     def __len__(self):
         return len(self.url)
 
-    def embed(self, opts=None):
-        return self._wrapper.render(self, opts=opts)
+    def embed(self, options=None):
+        return self._wrapper.render(self, options=options)
 
 
 class BaseWrapper(object):
@@ -41,11 +41,11 @@ class BaseWrapper(object):
             'MEDIA_URL': settings.MEDIA_URL,
         }
 
-    def render(self, videometa, opts=None):
+    def render(self, videometa, options=None):
         if isinstance(videometa, basestring):
             videometa = self.clean_url(videometa) # BC
         ctx = {}
-        ctx.update(opts or {})
+        ctx.update(options or {})
         ctx.update(self.get_context(videometa))
         template_name = self.get_template_name(videometa)
         return render_to_string(template_name, ctx)
