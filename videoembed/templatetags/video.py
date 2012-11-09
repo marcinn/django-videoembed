@@ -1,5 +1,5 @@
 from django import template
-from videoembed import embed
+from videoembed import embed, match_wrapper
 import re
 
 register = template.Library()
@@ -30,21 +30,26 @@ def token_kwargs(bits, parser):
 
 
 class EmbedMovieNode(template.Node):
-    def __init__(self, url, opts):
+    def __init__(self, videometa, opts):
         self.opts = dict([(key, template.Variable(opt)) for key,opt in opts.items()])
-        self.url = template.Variable(url)
+        self.videometa = template.Variable(videometa)
 
     def render(self, context):
         opts = []
         for key, value in self.opts.items():
             opts.append((key, value.resolve(context)))
-        return embed(self.url.resolve(context), **dict(opts))
+        videometa = self.videometa.resolve(context)
+
+        if isinstance(videometa, basestring):
+            return embed(videometa, **dict(opts)) # BC
+        else:
+            return videometa.embed(opts=opts)
         
 
 @register.tag
 def embed_movie(parser, token):
     bits = token.split_contents()
-    url = bits[1]
+    videometa = bits[1]
     kwargs_bits = bits[2:]
 
     opts = {}
@@ -53,6 +58,29 @@ def embed_movie(parser, token):
         if match:
             key,val=match.groups()
             opts[key]=val
-    return EmbedMovieNode(url, opts)
+    return EmbedMovieNode(videometa, opts)
 
 
+class GetMovieNode(template.Node):
+    def __init__(self, url, variable_name):
+        self.url = template.Variable(url)
+        self.variable_name = variable_name
+
+    def render(self, context):
+        url = self.url.resolve(context)
+        cast_as = self.variable_name
+        wrapper = match_wrapper(url)
+        if wrapper:
+            context[cast_as] = wrapper.clean_url(url)
+        return ''
+
+@register.tag
+def get_movie(parser, token):
+    bits = token.split_contents()
+    if len(bits)<2 or len(bits)>4 or not bits[2] == 'as':
+        raise template.TemplateSyntaxError('Usage: %s <url> as <variable_name>' % bits[0])
+
+    url = bits[1]
+    variable_name = bits[3]
+
+    return GetMovieNode(url, variable_name)
