@@ -42,8 +42,6 @@ class BaseWrapper(object):
         }
 
     def render(self, videometa, options=None):
-        if isinstance(videometa, basestring):
-            videometa = self.clean_url(videometa) # BC
         ctx = {}
         ctx.update(options or {})
         ctx.update(self.get_context(videometa))

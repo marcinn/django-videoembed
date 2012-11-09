@@ -22,6 +22,6 @@ def embed(url, **options):
     """
     wrapper = match_wrapper(url)
     if wrapper:
-        return wrapper.render(url, options)
+        return wrapper.render(wrapper.clean_url(url), options)
     return ''
 
