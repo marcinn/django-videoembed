@@ -6,11 +6,10 @@ import urlparse
 
 
 class VideoMeta(object):
-    def __init__(self, wrapper, url, thumbnail_url=None, title=None):
+    def __init__(self, wrapper, url, thumbnail_url=None):
         self._wrapper = wrapper
         self.url = url
         self.thumbnail_url = thumbnail_url
-        self.title = title
 
     def __unicode__(self):
         return self.url
@@ -20,18 +19,6 @@ class VideoMeta(object):
 
     def embed(self, opts=None):
         return self._wrapper.render(self, opts=opts)
-
-    def startswith(self, part):
-        """
-        str-like method for backward compatibility
-        """
-        return self.url.startswith(part)
-    
-    def replace(self, src, dest):
-        """
-        str-like method for backward compatibility
-        """
-        return self.url.replace(src, dest)
 
 
 class BaseWrapper(object):
