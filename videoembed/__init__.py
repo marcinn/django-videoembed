@@ -11,17 +11,17 @@ def match_wrapper(url):
     return None
 
 
-def embed(url, **opts):
+def embed(url, **options):
     """
     Generate embed HTML code for specified video URL.
     Options are passed to renderer as template context.
 
     Arguments:
         `url`   - url of the movie
-        `opts`  - optional parameters dictionary
+        `options`  - optional parameters dictionary
     """
     wrapper = match_wrapper(url)
     if wrapper:
-        return wrapper.render(url, opts)
+        return wrapper.render(wrapper.clean_url(url), options)
     return ''
 

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-videoembed',
-    version='0.2',
+    version='0.3',
     description="Easy embedding videos with Django",
     author='Marcin Nowak',
     author_email='marcin.j.nowak@gmail.com',
