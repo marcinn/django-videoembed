@@ -51,8 +51,8 @@ class BaseWrapper(object):
 
 class YoutubeWrapper(BaseWrapper):
     re_urls = (
-        re.compile(r'https?://(www.)?youtube.com/watch\?v=(?P<id>[^&]+).*$'),
-        re.compile(r'https?://(www.)?youtu.be/(?P<id>.+)'),
+        re.compile(r'https?://(www.)?youtube.com/watch(.+&|\?)v=(?P<id>[^&?]+).*$'),
+        re.compile(r'https?://(www.)?youtu.be/(?P<id>[^&?]+)'),
     )
     template_name = 'videoembed/embed_youtube.html'
 
