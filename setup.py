@@ -7,6 +7,7 @@ setup(
     author='Marcin Nowak',
     author_email='marcin.j.nowak@gmail.com',
     url='https://github.com/marcinn/django-video-embed',
+    download_url='https://github.com/marcinn/django-video-embed/archive/0.3.zip',
     packages=find_packages(),
     package_dir={'videoembed': 'videoembed'},
     classifiers=[
